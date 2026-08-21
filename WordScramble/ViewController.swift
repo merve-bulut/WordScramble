@@ -74,22 +74,15 @@ class ViewController: UITableViewController {
                     
                     return // this is for if word is OK app will not show alert
                 } else {
-                    errorTitle = "Word not recognized"
-                    errorMessage = "You can't just make them up, you know!"
+                    showErrorMessage(title: "Word not recognized", message: "You can't just make them up, you know!")
                 }
             } else {
-                errorTitle = "Word already used"
-                errorMessage = "Be more original!"
+                showErrorMessage(title: "Word already used", message: "Be more original!")
             }
         } else {
-            guard let title = title else { return}
-            errorTitle = "Word not possible"
-            errorMessage = "You can't spell that word from \(title.lowercased())."
+            guard let title = title else { return }
+            showErrorMessage(title: "Word not possible", message: "You can't spell that word from \(title.lowercased()).")
         }
-        
-        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
     }
     
     func isPossible(word: String) -> Bool {
@@ -113,7 +106,13 @@ class ViewController: UITableViewController {
         let checker = UITextChecker()
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
-        return misspelledRange.location == NSNotFound && word.count > 3
+        return misspelledRange.location == NSNotFound && word.count >= 3
+    }
+    
+    func showErrorMessage(title: String, message: String) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
     }
 }
 
